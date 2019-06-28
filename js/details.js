@@ -128,6 +128,11 @@ var Details = {
             }
         });
     },
+    ajustaMinutos: (minutos) => {
+        this.minutos = Math.round(((minutos * 60)/100)) + "";
+        this.minutos = this.minutos < 10 ? this.minutos = "0" + this.minutos : this.minutos;
+        return this.minutos.substring(0,2);
+    },
     getCartaoPonto : () => {
         let _data = window.document.location.href.split("?")[1];
         let _action = documentUrl + "webservices/servicesRegisterWork.php";
@@ -139,14 +144,14 @@ var Details = {
             $.each(response, function(i,item){
                 let cartaoPonto = JSON.parse(item);
                 let horaTrabalhada = Padrao.caculaHoraTrabalhada(cartaoPonto["datainicial"], cartaoPonto["datafinal"],  cartaoPonto["horaentrada"], cartaoPonto["horasaida"]);
-                horaTotalTrabalhada += (((horaTrabalhada + "").split(".")[0] * 60) * 1) + ((horaTrabalhada + "").split(".")[1] * 1);
+                horaTotalTrabalhada += (((horaTrabalhada + "").split(".")[0] * 60) * 1) + Details.ajustaMinutos(((horaTrabalhada + "").split(".")[1] * 1)) * 1;
                 html += '<li>';
                 html += '<a href="" class="alter-horario" data-emp="" title="Editar">';
                 html += 'D. Entrada: ' + Padrao.formataData(cartaoPonto["datainicial"]) + ' <--> ';
                 html += 'D. Saída: ' + Padrao.formataData(cartaoPonto["datafinal"]) + ' | ';
                 html += 'H. Entrou: ' + cartaoPonto["horaentrada"] + ' <--> ';
                 html += 'H. Saiu: ' + cartaoPonto["horasaida"] + ' | ';
-                html += 'Total: ' + (horaTrabalhada + "").split(".")[0] + "h" + (horaTrabalhada + "").split(".")[1];
+                html += 'Total: ' + (horaTrabalhada + "").split(".")[0] + "h" + Details.ajustaMinutos(((horaTrabalhada + "").split(".")[1]));
                 html += '<div class="icon-options">';
                 html += '<span class="btn-excluir">Excluir</span>';
                 html += '</div>';
@@ -163,10 +168,16 @@ var Details = {
             $(".lista-empresas.lista-cartao-ponto").html(html);
             //Padrao.chamaMensagem("Erro ao carregar Cliente.", "error");
         }
-        $("#extra-ultimo").text(Details.convertMoeda((horaTotalTrabalhada/60) * $(".trab-hora-ultimo").text().replace(",",".")));
-        $("#extra-base").text(Details.convertMoeda((horaTotalTrabalhada/60)  * $(".trab-hora-base").text().replace(",",".")));
-        $("#qtd-horas-extra").text(((horaTotalTrabalhada/60) + "").split(".")[0] + "h" + ((horaTotalTrabalhada/60) + "").split(".")[1]);
+        $("#extra-ultimo-50").text(Details.convertMoeda((horaTotalTrabalhada/60) * $(".trab-hora-ultimo-50").text().replace(",",".")));
+        $("#extra-ultimo-100").text(Details.convertMoeda((horaTotalTrabalhada/60) * $(".trab-hora-ultimo-100").text().replace(",",".")));
+        $("#extra-base-50").text(Details.convertMoeda((horaTotalTrabalhada/60) * $(".trab-hora-base-50").text().replace(",",".")));
+        $("#extra-base-100").text(Details.convertMoeda((horaTotalTrabalhada/60) * $(".trab-hora-base-100").text().replace(",",".")));
+        $("#qtd-horas-extra").text(((horaTotalTrabalhada/60) + "").split(".")[0] + "h" + Details.ajustaMinutos(((horaTotalTrabalhada/60) + "").split(".")[1]));
         $("#qtd-dias-extra").text(response.length);
+        let horaMensalMedia = (((horaTotalTrabalhada/response.length)/60) * 30).toFixed(2);
+        let horaDiariaMedia = (((horaTotalTrabalhada/response.length)/60)).toFixed(2);
+        $("#dados-hora-extra .media-mensal").text((horaMensalMedia + "").split(".")[0]  + "h" + Details.ajustaMinutos((horaMensalMedia + "").split(".")[1]));
+        $("#dados-hora-extra .media-diaria").text((horaDiariaMedia + "").split(".")[0]  + "h" + Details.ajustaMinutos((horaDiariaMedia + "").split(".")[1]));
     },
     calculaRecisao: (ultimosalario, salariobase, datademissao, horasemanal) => {
         let _ultimoSalario = (ultimosalario.replace(".","")).replace(",",".");
@@ -174,13 +185,24 @@ var Details = {
         let _jornada = horasemanal * 30;
         let _inssUltimo, _inssBase;
 
-        if(((_ultimoSalario * 1) <= 1751.81) || ((_ultimoBase * 1) <= 1751.81)){
-            _inssUltimo = _inssBase = 0.08;
-        }else if(((_ultimoSalario * 1) <= 2919.72) || ((_ultimoBase * 1) <= 2919.72)){
-            _inssUltimo = _inssBase = 0.09;
+        if((_ultimoSalario * 1) <= 1751.81){
+            _inssUltimo = 0.08;
+        }else if((_ultimoSalario * 1) <= 2919.72){
+            _inssUltimo = 0.09;
         }else{
-            _inssUltimo = _inssBase = 0.11;
+            _inssUltimo = 0.11;
         }
+
+        if((_ultimoBase * 1) <= 1751.81){
+            _inssBase = 0.08;
+        }else if((_ultimoBase * 1) <= 2919.72){
+            _inssBase = 0.09;
+        }else{
+            _inssBase = 0.11;
+        }
+
+        $("#dados-rescisao .ultimo-salario").text($("#dados-rescisao .ultimo-salario").text() + " - INSS " + (_inssUltimo * 100));
+        $("#dados-rescisao .salario-base").text($("#dados-rescisao .salario-base").text() + " - INSS " + (_inssBase * 100));
 
         let salarioProporcionalUltimo = ((_ultimoSalario/_jornada) * horasemanal) * datademissao.split("-")[2];
         let salarioCheioUltimo = _ultimoSalario * 1;
@@ -216,7 +238,13 @@ var Details = {
         let totalVenUltimo = salarioCheioUltimo + decimoTerceiroVencidoUltimo + salarioCheioUltimo + (salarioCheioUltimo * 0.3);
         $("#total-ven-ultimo").text(Details.convertMoeda(totalVenUltimo));
         $("#total-inss-ven-ultimo").text(" - [INSS - " + Details.convertMoeda(totalVenUltimo*_inssBase) + "]");
-        $(".trab-hora-ultimo").text(Details.convertMoeda(_ultimoSalario/_jornada));
+        $(".trab-hora-ultimo-50").text(Details.convertMoeda(((_ultimoSalario/_jornada)/2) + (_ultimoSalario/_jornada)));
+        $(".trab-hora-ultimo-100").text(Details.convertMoeda((_ultimoSalario/_jornada) + (_ultimoSalario/_jornada)));
+        
+        let calculaHoraUltimo50 = Details.convertMoeda(_ultimoSalario/_jornada) + " (normal) + " + (Details.convertMoeda((_ultimoSalario/_jornada)/2)) + " (extra de 50%)";
+        let calculaHoraUltimo100 = Details.convertMoeda(_ultimoSalario/_jornada) + " (normal) + " + Details.convertMoeda(_ultimoSalario/_jornada) + " (extra de 100%)";
+        $(".trab-hora-ultimo-50").after("<strong data-hora-normal=" + Details.convertMoeda(_ultimoSalario/_jornada) + "> = " + calculaHoraUltimo50 + "</strong>");
+        $(".trab-hora-ultimo-100").after("<strong> = " + calculaHoraUltimo100 + "</strong>");
 
         $("#sal-pro-base strong").text(Details.convertMoeda(salarioProporcionalBase));
         $("#sal-ven-base strong").text(Details.convertMoeda(salarioCheioBase));
@@ -232,11 +260,63 @@ var Details = {
         let totalVenBase = salarioCheioBase + decimoTerceiroVencidoBase + salarioCheioBase + (salarioCheioBase * 0.3);
         $("#total-ven-base").text(Details.convertMoeda(totalVenBase));
         $("#total-inss-ven-base").text(" - [INSS - " + Details.convertMoeda(totalVenBase*_inssBase) + "]");
-        $(".trab-hora-base").text(Details.convertMoeda(_ultimoBase/_jornada));
+        $(".trab-hora-base-50").text(Details.convertMoeda(((_ultimoBase/_jornada)/2) + (_ultimoBase/_jornada)));
+        $(".trab-hora-base-100").text(Details.convertMoeda((_ultimoBase/_jornada) + (_ultimoBase/_jornada)));
+
+        let calculaHoraBase50 = Details.convertMoeda(_ultimoBase/_jornada) + " (normal) + " + (Details.convertMoeda((_ultimoBase/_jornada)/2)) + " (extra de 50%)";
+        let calculaHoraBase100 = Details.convertMoeda(_ultimoBase/_jornada) + " (normal) + " + Details.convertMoeda((_ultimoBase/_jornada)) + " (extra de 100%)";
+        $(".trab-hora-base-50").after("<strong data-hora-normal=" + Details.convertMoeda(_ultimoBase/_jornada) + "> = " + calculaHoraBase50 + "</strong>");
+        $(".trab-hora-base-100").after("<strong> = " + calculaHoraBase100 + "</strong>");
     },
     convertMoeda: (moeda) => {
         this.moeda = moeda.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
         return this.moeda.split(" ")[1];
+    },
+    calculoPericulosidadeInsalubridade: (_salarioUltimo, _salarioBase) => {
+        let salarioUltimo = (_salarioUltimo.replace(".","")).replace(",",".") * 1;
+        let salarioBase = (_salarioBase.replace(".","")).replace(",",".") * 1;
+        $("#sal-ultimo-periculosidade").text(_salarioUltimo + " + R$ " + Details.convertMoeda(salarioUltimo * 0.3) + " = R$ " + Details.convertMoeda((salarioUltimo * 1.3)));
+        $("#sal-base-periculosidade").text(_salarioBase + " + R$ " + Details.convertMoeda(salarioBase * 0.3) + " = R$ " + Details.convertMoeda((salarioBase * 1.3)));
+
+        let _horaNormal = $(".trab-hora-ultimo-50").parent().find("strong").attr("data-hora-normal").replace(".","").replace(",",".");
+        $("#cada-hora-normal-ultimo").text(Details.convertMoeda(_horaNormal * 1) + " + R$ " + Details.convertMoeda(_horaNormal * 0.3) + " = R$ " + Details.convertMoeda(_horaNormal * 1.3));
+        $("#cada-hora-50-ultimo").text(Details.convertMoeda(_horaNormal * 1) + " + R$ " + Details.convertMoeda(_horaNormal * 0.5) +  ") + R$ " + Details.convertMoeda((_horaNormal * 1.5) * 0.3) + " = R$ " + Details.convertMoeda(((_horaNormal * 1.5) * 0.3) + (_horaNormal * 1.5)));
+        $("#cada-hora-100-ultimo").text(Details.convertMoeda(_horaNormal * 1) + " + R$ " + Details.convertMoeda(_horaNormal * 1) +  ") + R$ " + Details.convertMoeda((_horaNormal * 2) * 0.3) + " = R$ " + Details.convertMoeda(((_horaNormal * 2) * 0.3) + (_horaNormal * 2)));
+
+        let _horaBase = $(".trab-hora-base-50").parent().find("strong").attr("data-hora-normal").replace(".","").replace(",",".");
+        $("#cada-hora-normal-base").text(Details.convertMoeda(_horaBase * 1) + " + R$ " + Details.convertMoeda(_horaBase * 0.3) + " = R$ " + Details.convertMoeda(_horaBase * 1.3));
+        $("#cada-hora-50-base").text(Details.convertMoeda(_horaBase * 1) + " + R$ " + Details.convertMoeda(_horaBase * 0.5) +  ") + R$ " + Details.convertMoeda((_horaBase * 1.5) * 0.3) + " = R$ " + Details.convertMoeda(((_horaBase * 1.5) * 0.3) + (_horaBase * 1.5)));
+        $("#cada-hora-100-base").text(Details.convertMoeda(_horaBase * 1) + " + R$ " + Details.convertMoeda(_horaBase * 1) +  ") + R$ " + Details.convertMoeda((_horaBase * 2) * 0.3) + " = R$ " + Details.convertMoeda(((_horaBase * 2) * 0.3) + (_horaBase * 2)));
+
+        // SALARIO BASE
+        let _horaMedia50 = Details.convertMoeda(((_horaNormal * 1.5) * 0.3) + (_horaNormal * 1.5)).replace(".","").replace(",",".");
+        let _horaMedia100 = Details.convertMoeda(((_horaNormal * 2) * 0.3) + (_horaNormal * 2)).replace(".","").replace(",",".");
+        let _horaTrabalhadaDiaria = $("#dados-hora-extra .media-diaria").first().text();
+        let _horaTrabalhadaMensal = $("#dados-hora-extra .media-mensal").first().text();
+        $("#dados-periculosidade .media-ultimo-diaria-50").text( _horaTrabalhadaDiaria + " * " + Details.convertMoeda(_horaMedia50 * 1) + " = R$ " + Details.convertMoeda((((_horaTrabalhadaDiaria.split("h")[0] * 60) + (_horaTrabalhadaDiaria.split("h")[1] * 1)) * _horaMedia50)/60));
+        $("#dados-periculosidade .media-ultimo-diaria-100").text(_horaTrabalhadaDiaria + " * " + Details.convertMoeda(_horaMedia100 * 1) + " = R$ " + Details.convertMoeda((((_horaTrabalhadaDiaria.split("h")[0] * 60) + (_horaTrabalhadaDiaria.split("h")[1] * 1)) * _horaMedia100)/60));
+        $("#dados-periculosidade .media-ultimo-mensal-50").text( _horaTrabalhadaMensal + " * " + Details.convertMoeda(_horaMedia50 * 1) + " = R$ " + Details.convertMoeda((((_horaTrabalhadaMensal.split("h")[0] * 60) + (_horaTrabalhadaMensal.split("h")[1] * 1)) * _horaMedia50)/60));
+        $("#dados-periculosidade .media-ultimo-mensal-100").text(_horaTrabalhadaMensal + " * " + Details.convertMoeda(_horaMedia100 * 1) + " = R$ " + Details.convertMoeda((((_horaTrabalhadaMensal.split("h")[0] * 60) + (_horaTrabalhadaMensal.split("h")[1] * 1)) * _horaMedia100)/60));
+
+        // SALARIO BASE
+        _horaMedia50 = Details.convertMoeda(((_horaBase * 1.5) * 0.3) + (_horaBase * 1.5)).replace(".","").replace(",",".");
+        _horaMedia100 = Details.convertMoeda(((_horaBase * 2) * 0.3) + (_horaBase * 2)).replace(".","").replace(",",".");
+        _horaTrabalhadaDiaria = $("#dados-hora-extra .media-diaria").first().text();
+        _horaTrabalhadaMensal = $("#dados-hora-extra .media-mensal").first().text();
+        $("#dados-periculosidade .media-base-diaria-50").text( _horaTrabalhadaDiaria + " * " + Details.convertMoeda(_horaMedia50 * 1) + " = R$ " + Details.convertMoeda((((_horaTrabalhadaDiaria.split("h")[0] * 60) + (_horaTrabalhadaDiaria.split("h")[1] * 1)) * _horaMedia50)/60));
+        $("#dados-periculosidade .media-base-diaria-100").text(_horaTrabalhadaDiaria + " * " + Details.convertMoeda(_horaMedia100 * 1) + " = R$ " + Details.convertMoeda((((_horaTrabalhadaDiaria.split("h")[0] * 60) + (_horaTrabalhadaDiaria.split("h")[1] * 1)) * _horaMedia100)/60));
+        $("#dados-periculosidade .media-base-mensal-50").text( _horaTrabalhadaMensal + " * " + Details.convertMoeda(_horaMedia50 * 1) + " = R$ " + Details.convertMoeda((((_horaTrabalhadaMensal.split("h")[0] * 60) + (_horaTrabalhadaMensal.split("h")[1] * 1)) * _horaMedia50)/60));
+        $("#dados-periculosidade .media-base-mensal-100").text(_horaTrabalhadaMensal + " * " + Details.convertMoeda(_horaMedia100 * 1) + " = R$ " + Details.convertMoeda((((_horaTrabalhadaMensal.split("h")[0] * 60) + (_horaTrabalhadaMensal.split("h")[1] * 1)) * _horaMedia100)/60));
+
+        // SALARIO BASE
+        $("#ultimo-insalub-10").text("Adicional por mês de: R$ " + Details.convertMoeda(salarioUltimo * 0.1) + " = R$ " + Details.convertMoeda(salarioUltimo * 1.1));
+        $("#ultimo-insalub-20").text("Adicional por mês de: R$ " + Details.convertMoeda(salarioUltimo * 0.2) + " = R$ " + Details.convertMoeda(salarioUltimo * 1.2));
+        $("#ultimo-insalub-40").text("Adicional por mês de: R$ " + Details.convertMoeda(salarioUltimo * 0.4) + " = R$ " + Details.convertMoeda(salarioUltimo * 1.4));
+
+        // SALARIO BASE
+        $("#base-insalub-10").text("Adicional por mês de: R$ " + Details.convertMoeda(salarioBase * 0.1) + " = R$ " + Details.convertMoeda(salarioBase * 1.1));
+        $("#base-insalub-20").text("Adicional por mês de: R$ " + Details.convertMoeda(salarioBase * 0.2) + " = R$ " + Details.convertMoeda(salarioBase * 1.2));
+        $("#base-insalub-40").text("Adicional por mês de: R$ " + Details.convertMoeda(salarioBase * 0.4) + " = R$ " + Details.convertMoeda(salarioBase * 1.4));
     },
     ready: () => {
         Details.getPessoaEmpresa();
@@ -244,6 +324,8 @@ var Details = {
         Details.alteraEmpresa();
         Details.registraCartaoPonto();
         Details.getCartaoPonto();
+        Details.calculoPericulosidadeInsalubridade($("#dados-hora-extra .ultimo-salario").text(), $("#dados-hora-extra .salario-base").text());
+
     }
 }
 

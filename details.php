@@ -219,18 +219,36 @@
 							<div class="mostra-recisao">
 								<div class="itens-50">
 									<div class="cada-iten-recisao">
-										<span class="cabecalho"><strong>Último Salário (R$ <span class="ultimo-salario"></span>) // R$ <span class="trab-hora-ultimo"></span></strong></span>
+									<span class="cabecalho" style="line-height: 20px;">
+										<strong>Último Salário (R$ <span class="ultimo-salario"></span>)</strong>
+										<br/> 
+										1 Hora: <strong>R$ <span class="trab-hora-ultimo-50"></span></strong>
+										<br/> 
+										1 Hora: <strong>R$ <span class="trab-hora-ultimo-100"></span></strong>
+									</span>
 									</div>
 									<div class="cada-iten-recisao">
-										<span class="itens-recisao">Horas extras (média): R$ <strong id="extra-ultimo"></strong></span>
+										<span class="itens-recisao">Horas extras (50%): <b>R$</b> <strong id="extra-ultimo-50"></strong></span>
+										<span class="itens-recisao">Horas extras (100%): <b>R$</b> <strong id="extra-ultimo-100"></strong></span>
+										<span class="itens-recisao">Média extra (diária): <strong class="media-diaria"></strong></span>
+										<span class="itens-recisao">Média extra (mensal): <strong class="media-mensal"></strong></span>
 									</div>
 								</div>
 								<div class="itens-50">
 									<div class="cada-iten-recisao">
-										<span class="cabecalho"><strong>Salário Base (R$ <span class="salario-base">1.400,00</span>) // R$ <span class="trab-hora-base"></span></strong></span>
+									<span class="cabecalho" style="line-height: 20px;">
+										<strong>Salário Base (R$ <span class="salario-base"></span>)</strong>
+										<br/> 
+										1 Hora: <strong>R$ <span class="trab-hora-base-50"></span></strong>
+										<br/> 
+										1 Hora: <strong>R$ <span class="trab-hora-base-100"></span></strong>
+									</span>
 									</div>
 									<div class="cada-iten-recisao">
-										<span class="itens-recisao">Horas extras  (média): R$ <strong id="extra-base"></strong></span>
+										<span class="itens-recisao">Horas extras (50%): <b>R$</b> <strong id="extra-base-50"></strong></span>
+										<span class="itens-recisao">Horas extras (100%): <b>R$</b> <strong id="extra-base-100"></strong></span>
+										<span class="itens-recisao">Média extra (diária): <strong class="media-diaria"></strong></span>
+										<span class="itens-recisao">Média extra (mensal): <strong class="media-mensal"></strong></span>
 									</div>
 								</div>
 								<div class="itens-100">
@@ -246,18 +264,36 @@
 							<div class="mostra-recisao">
 								<div class="itens-50">
 									<div class="cada-iten-recisao">
-										<span class="cabecalho"><strong>Último Salário (R$ <span class="ultimo-salario">1.200,00</span>)</strong></span>
+										<span class="cabecalho"><strong>Último Salário (R$ <span class="ultimo-salario"></span>)</strong></span>
 									</div>
 									<div class="cada-iten-recisao">
-										<span class="itens-recisao">Periculosidade (30%): R$ <strong>1.234,00</strong></span>
+										<span class="itens-recisao">Periculosidade (30%): <b>R$</b> <strong id="sal-ultimo-periculosidade"></strong></span>
+										<span class="itens-recisao"><br>Hora(1) trabalhada:<br></span>
+										<span class="itens-recisao">(normal + 30%): <b>R$</b> <strong id="cada-hora-normal-ultimo"></strong></span>
+										<span class="itens-recisao">((normal + 50%) + 30%): <b>(R$</b> <strong id="cada-hora-50-ultimo"></strong></span>
+										<span class="itens-recisao">((normal + 100%)  + 30%): <b>(R$</b> <strong id="cada-hora-100-ultimo"></strong></span>
+										
+										<span class="itens-recisao"><br>Extra ((diária + 50%) + 30%): <strong class="media-diaria media-ultimo-diaria-50"></strong></span>
+										<span class="itens-recisao">Extra ((diária + 100%) + 30%): <strong class="media-diaria media-ultimo-diaria-100"></strong></span>
+										<span class="itens-recisao">Extra ((mensal + 50%) + 30%): <strong class="media-mensal media-ultimo-mensal-50"></strong></span>
+										<span class="itens-recisao">Extra ((mensal + 100%) + 30%): <strong class="media-mensal media-ultimo-mensal-100"></strong></span>
 									</div>
 								</div>
 								<div class="itens-50">
 									<div class="cada-iten-recisao">
-										<span class="cabecalho"><strong>Salário Base (R$ <span class="salario-base">1.400,00</span>)</strong></span>
+										<span class="cabecalho"><strong>Salário Base (R$ <span class="salario-base"></span>)</strong></span>
 									</div>
 									<div class="cada-iten-recisao">
-										<span class="itens-recisao">Periculosidade (30%): R$ <strong>1.234,00</strong></span>
+										<span class="itens-recisao">Periculosidade (30%): <b>R$</b> <strong id="sal-base-periculosidade"></strong></span>
+										<span class="itens-recisao"><br>Hora(1) trabalhada:<br></span>
+										<span class="itens-recisao">(normal + 30%): <b>R$</b> <strong id="cada-hora-normal-base"></strong></span>
+										<span class="itens-recisao">((normal + 50%) + 30%): <b>(R$</b> <strong id="cada-hora-50-base"></strong></span>
+										<span class="itens-recisao">((normal + 100%)  + 30%): <b>(R$</b> <strong id="cada-hora-100-base"></strong></span>
+										
+										<span class="itens-recisao"><br>Extra ((diária + 50%) + 30%): <strong class="media-diaria media-base-diaria-50"></strong></span>
+										<span class="itens-recisao">Extra ((diária + 100%) + 30%): <strong class="media-diaria media-base-diaria-100"></strong></span>
+										<span class="itens-recisao">Extra ((mensal + 50%) + 30%): <strong class="media-mensal media-base-mensal-50"></strong></span>
+										<span class="itens-recisao">Extra ((mensal + 100%) + 30%): <strong class="media-mensal media-base-mensal-100"></strong></span>
 									</div>
 								</div>
 							</div>
@@ -275,36 +311,30 @@
 							<div class="mostra-recisao">
 								<div class="itens-50">
 									<div class="cada-iten-recisao">
-										<span class="cabecalho"><strong>Último Salário (R$ <span class="ultimo-salario">1.200,00</span>)</strong></span>
+										<span class="cabecalho"><strong>Último Salário (R$ <span class="ultimo-salario"></span>)</strong></span>
 									</div>
 									<div class="cada-iten-recisao">
-										<span class="itens-recisao">Insalubridade (10%): R$ <strong>1.234,00</strong></span>
+										<span class="itens-recisao">Insalubridade (10%): <strong id="ultimo-insalub-10"></strong></span>
 									</div>
 									<div class="cada-iten-recisao">
-										<span class="itens-recisao">Insalubridade (20%): R$ <strong>1.234,00</strong></span>
+										<span class="itens-recisao">Insalubridade (20%): <strong id="ultimo-insalub-20"></strong></span>
 									</div>
 									<div class="cada-iten-recisao">
-										<span class="itens-recisao">Insalubridade (30%): R$ <strong>1.234,00</strong></span>
-									</div>
-									<div class="cada-iten-recisao">
-										<span class="itens-recisao">Insalubridade (40%): R$ <strong>1.234,00</strong></span>
+										<span class="itens-recisao">Insalubridade (40%): <strong id="ultimo-insalub-40"></strong></span>
 									</div>
 								</div>
 								<div class="itens-50">
 									<div class="cada-iten-recisao">
-										<span class="cabecalho"><strong>Salário Base (R$ <span class="salario-base">1.400,00</span>)</strong></span>
+										<span class="cabecalho"><strong>Salário Base (R$ <span class="salario-base"></span>)</strong></span>
 									</div>
 									<div class="cada-iten-recisao">
-										<span class="itens-recisao">Insalubridade (10%): R$ <strong>1.234,00</strong></span>
+										<span class="itens-recisao">Insalubridade (10%): <strong id="base-insalub-10"></strong></span>
 									</div>
 									<div class="cada-iten-recisao">
-										<span class="itens-recisao">Insalubridade (20%): R$ <strong>1.234,00</strong></span>
+										<span class="itens-recisao">Insalubridade (20%): <strong id="base-insalub-20"></strong></span>
 									</div>
 									<div class="cada-iten-recisao">
-										<span class="itens-recisao">Insalubridade (30%): R$ <strong>1.234,00</strong></span>
-									</div>
-									<div class="cada-iten-recisao">
-										<span class="itens-recisao">Insalubridade (40%): R$ <strong>1.234,00</strong></span>
+										<span class="itens-recisao">Insalubridade (40%): <strong id="base-insalub-40"></strong></span>
 									</div>
 								</div>
 							</div>
