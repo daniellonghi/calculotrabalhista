@@ -2,7 +2,7 @@
 <html lang="pt-BR">
 <head>
 
-	<meta charset="UTF-8">
+	<meta charset="utf-8">
 
 	<meta name="rating" content="general"/>
 	<meta name="language" content="portuguese, PT"/>

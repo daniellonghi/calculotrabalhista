@@ -201,8 +201,8 @@ var Details = {
             _inssBase = 0.11;
         }
 
-        $("#dados-rescisao .ultimo-salario").text($("#dados-rescisao .ultimo-salario").text() + " - INSS " + (_inssUltimo * 100));
-        $("#dados-rescisao .salario-base").text($("#dados-rescisao .salario-base").text() + " - INSS " + (_inssBase * 100));
+        $("#dados-rescisao .ultimo-salario").text($("#dados-rescisao .ultimo-salario").text() + " - INSS " + (_inssUltimo * 100) + "%");
+        $("#dados-rescisao .salario-base").text($("#dados-rescisao .salario-base").text() + " - INSS " + (_inssBase * 100) + "%");
 
         let salarioProporcionalUltimo = ((_ultimoSalario/_jornada) * horasemanal) * datademissao.split("-")[2];
         let salarioCheioUltimo = _ultimoSalario * 1;
